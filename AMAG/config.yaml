@@ -1,0 +1,19 @@
+# dataset
+num_channels: 20       # C: 图节点数
+input_dim: 1           # D: 特征维度
+seq_len: 50            # T: 输入时间窗口长度
+pred_len: 10           # 预测时间长度
+total_samples: 100    # 总样本数
+
+# model
+hidden_dim: 64         # H: 隐藏层维度
+beta_init: [1.0, 1.0, 1.0] 
+
+# train
+mode: "multi_step"     # "one_step" or "multi_step"
+batch_size: 32
+learning_rate: 0.0005  
+epochs: 50
+train_ratio: 0.7              
+seed: 42
+device: "cuda"         
