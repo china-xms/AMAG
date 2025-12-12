@@ -12,8 +12,8 @@ class SI(nn.Module):
         self.hidden_dim = hidden_dim
 
         # 可学习的邻接矩阵 A_a 和 A_m 
-        self.A_a = nn.Parameter(torch.randn(num_channels, num_channels))
-        self.A_m = nn.Parameter(torch.randn(num_channels, num_channels))
+        self.A_a = nn.Parameter(torch.zeros(num_channels, num_channels))
+        self.A_m = nn.Parameter(torch.zeros(num_channels, num_channels))
 
         # MLP
         self.adaptor_mlp = nn.Sequential(

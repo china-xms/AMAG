@@ -38,7 +38,7 @@ def train_model(model, train_loader, optimizer, device, epochs):
         
         time_end = time.time()
         print(f"Epoch {epoch+1} completed in {time_end - time_start:.2f} seconds.")
-        print(f"Epoch {epoch+1}/{epochs} Avg Loss: {total_loss / len(train_loader):.6f}")
+        print(f"Epoch {epoch+1}/{epochs} Avg Loss: {total_loss / (epoch+1):.6f}")
     print(f"Total Training Time: {time.time() - time_all_start:.2f} seconds.")
     
     return model

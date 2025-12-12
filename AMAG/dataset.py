@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 import numpy as np
 
 class SyntheticDataset(Dataset):
-    def __init__(self, num_samples, num_channels, seq_len, pred_len, connection_ratio=0.2):
+    def __init__(self, D, num_samples, num_channels, seq_len, pred_len, connection_ratio=0.2):
         """
         X_t = X_{t-1} + G(X_{t-1}, A) + noise
         """
@@ -13,6 +13,7 @@ class SyntheticDataset(Dataset):
         self.Layer_norm = torch.nn.LayerNorm(num_channels)
         
         with torch.no_grad():
+            self.D = D
             # 生成邻接矩阵 A
             self.adj = np.random.rand(num_channels, num_channels)
             mask = np.random.rand(num_channels, num_channels) < connection_ratio
@@ -29,21 +30,21 @@ class SyntheticDataset(Dataset):
             self.data = []
             for _ in range(num_samples):
                 # 随机初始化 X_0
-                x = torch.randn(num_channels, 1) 
+                x = torch.randn(num_channels, self.D) 
                 sequence = [x]
             
                 for _ in range(self.total_len - 1):
-                    noise = torch.randn(num_channels, 1) * 0.1
+                    noise = torch.randn(num_channels, self.D) * 0.1
                     x_next = torch.mm(self.adj, x) + noise + x
                     x_next = self.Layer_norm(x_next.T).T 
                     sequence.append(x_next)
                     x = x_next
             
                 # Stack: (Total_Len, C, D)
-                sample_data = torch.stack(sequence).squeeze(-1)
-                self.data.append(sample_data.detach()) # D=1
+                sample_data = torch.stack(sequence)
+                self.data.append(sample_data.detach()) 
 
-            self.data = torch.stack(self.data).unsqueeze(-1) # (N, Total_Len, C, D)
+            self.data = torch.stack(self.data) # (N, Total_Len, C, D)
 
     def __len__(self):
         return len(self.data)

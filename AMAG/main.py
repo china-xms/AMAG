@@ -19,6 +19,7 @@ def main():
     
     # 准备数据集 
     full_dataset = SyntheticDataset(
+        D = config['input_dim'],
         num_samples=config['total_samples'],
         num_channels=config['num_channels'],
         seq_len=config['seq_len'],

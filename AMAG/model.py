@@ -25,10 +25,10 @@ class AMAG(nn.Module):
         """
         print("Initializing Adjacency Matrices with Correlation...")
         batch_x, _ = next(iter(data_loader)) # (B, T, C, D)
-        batch_x = batch_x.to(device).squeeze(-1) # (B, T, C)
+        batch_x = batch_x.to(device) # (B, T, C, D)
         
-        # Permute to (B, C, T) -> Flatten to (C, B*T)
-        data_flat = batch_x.permute(0, 2, 1).reshape(self.C, -1)
+        # Permute to (B, C, T, D) -> Flatten to (C, B*T*D)
+        data_flat = batch_x.permute(0, 2, 1, 3).reshape(self.C, -1)
         
         corr_matrix = torch.corrcoef(data_flat)
         corr_matrix = torch.nan_to_num(corr_matrix, 0.0)
